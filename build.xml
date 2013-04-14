@@ -89,4 +89,10 @@
     <!-- version-tag: 1 -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
 
+    <target name="-compile" depends="-pre-build, -build-setup, -code-gen, -pre-compile">
+      <exec executable="lein">
+        <arg value="compile" />
+      </exec>
+    </target>
+
 </project>
