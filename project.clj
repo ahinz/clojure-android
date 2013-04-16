@@ -10,7 +10,9 @@
   (let [sdk (:sdk.dir (load-props "local.properties"))
         android-ver (:target (load-props "project.properties"))
         path "%s/platforms/%s/android.jar"]
-    [(format path sdk android-ver)]))
+    [(format path sdk android-ver)
+     "libs/jsoup-1.7.1.jar"
+     "google-play-services_lib/libs/google-play-services.jar"]))
 
 (defproject factorial "0.1.0-SNAPSHOT"
   :description "A simple factorial library"
@@ -20,7 +22,8 @@
   :java-source-paths ["src/fac", "gen"]
   :source-paths ["src/clojure"]
   :compile-path "bin/classes"
-  :dependencies [[android/clojure "1.5.0"]]
+  :dependencies [[android/clojure "1.5.0"]
+                 [cheshire "5.1.1"]]
   :main android.factorial.activity
   :aot :all
   :resource-paths ~android-cp

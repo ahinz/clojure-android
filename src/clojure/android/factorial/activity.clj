@@ -1,6 +1,10 @@
 (ns android.factorial.activity
-  (:import (fac.android R$id R$layout)
-           (android.util Log)))
+  (:require [android.factorial.core :as core])
+  (:import 
+   (fac.android R$id R$layout)
+   (android.util Log)))
+
+;(set! *warn-on-reflection* true)
 
 (gen-class :name fac.android.FactorialActivity
            :extends android.app.Activity
@@ -17,4 +21,10 @@
     (.setOnClickListener button
      (reify android.view.View$OnClickListener
        (onClick [this view]
-         (.setText text "The button was clicked"))))))
+         (.setText text "The button was clicked")))))
+
+  (let [map (-> this 
+                .getFragmentManager
+                (.findFragmentById R$id/map)
+                .getMap)]
+    (core/init-map map)))
