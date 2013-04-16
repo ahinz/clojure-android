@@ -1,6 +1,7 @@
 (ns android.factorial.activity
   (:require [android.factorial.core :as core])
   (:import 
+   (com.google.android.gms.maps MapsInitializer)
    (fac.android R$id R$layout ListActivity)
    (android.content Intent)
    (android.util Log)))
@@ -17,6 +18,7 @@
   (Log/i "Factorial" "Called this....")
   (.superOnCreate this bundle)
   (.setContentView this R$layout/main)
+  (MapsInitializer/initialize this)
   (let [button (.findViewById this R$id/bt)
         ^android.widget.TextView text (.findViewById this R$id/tx)]
     (.setOnClickListener button
