@@ -3,8 +3,9 @@
   (:require 
    [cheshire.core :as json])
   (:import
+   (fac.android R$drawable)
    (com.google.android.gms.maps GoogleMap CameraUpdateFactory)
-   (com.google.android.gms.maps.model Marker MarkerOptions LatLng)
+   (com.google.android.gms.maps.model Marker MarkerOptions LatLng BitmapDescriptorFactory)
    (org.jsoup Jsoup)
    (org.jsoup.nodes Document)))
 
@@ -34,10 +35,22 @@
         json-blob (.replaceAll json-blob "(\\s+)([A-Za-z0-9]+)(:.*)" "$1\"$2\"$3")]    
     (json/parse-string json-blob)))
 
-(defn add-marker-to-map [^GoogleMap map lat lng]
+(defn -marker-icon-for-veg-level [vlvl]
+  (cond
+   (= vlvl 1)
+   (BitmapDescriptorFactory/fromResource R$drawable/green_marker) ;; Vegan
+
+   (or (= vlvl 3) (= vlvl 4) (= vlvl 5))
+   (BitmapDescriptorFactory/fromResource R$drawable/yellow_marker) ;; Vegi
+
+   :else
+   (BitmapDescriptorFactory/fromResource R$drawable/black_marker)))
+
+(defn add-marker-to-map [^GoogleMap map vlvl lat lng]
   (.addMarker 
    map
    (-> (MarkerOptions.)
+       (.icon (-marker-icon-for-veg-level vlvl))
        (.position (LatLng. (java.lang.Double/parseDouble lat)
                            (java.lang.Double/parseDouble lng)))
        (.title "Title"))))
@@ -49,5 +62,7 @@
 
   ; Add markers
   (doseq [vendor (read-vendors-page)]
-    (add-marker-to-map map (get vendor "latitude") (get vendor "longitude"))))
+    (add-marker-to-map 
+     map 
+     (get vendor "vegLevel") (get vendor "latitude") (get vendor "longitude"))))
 
